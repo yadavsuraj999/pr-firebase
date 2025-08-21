@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes, useLocation, useParams } from "react-router-dom"
 import Login from "./components/Login"
 import Home from "./components/Home"
 import Signup from "./components/Signup"
@@ -9,9 +9,13 @@ const App = () => {
         <div>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/"  element={<Login/>}/>
-                    <Route path="home" element={<Protectedroute Component={<Home />} />} />
-                    <Route path="signup" element={<Signup />} />
+                    <Route path="/" element={<Login />} />
+                    <Route path="/home" element={
+                        <Protectedroute>
+                            <Home />
+                        </Protectedroute>
+                            } />
+                    <Route path="/signup" element={<Signup />} />
                 </Routes>
             </BrowserRouter>
         </div>
