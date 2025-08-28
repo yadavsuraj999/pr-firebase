@@ -27,7 +27,8 @@ const Signup = () => {
                 navigate("/home");
             })
             .catch((error) => {
-                alert("password is worng");
+                alert("User already exist");
+                navigate("/")
             });
         }
 

@@ -11,28 +11,44 @@ const Login = () => {
     setInput({ ...input, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, input.email, input.password)
-      .then((user) => {
-        setInput({ email: "", password: "" });
-        navigate("/home");
-      })
-      .catch((error) => {
-        alert("please create account first");
-      });
+
+    if(input.email.trim() === "" || input.password.trim() === ""){
+      alert("please fill all input filled")
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, input.email, input.password);
+      setInput({ email: "", password: "" });
+      navigate("/home");
+    } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        alert("User not found. Please sign up first.");
+      } else if (error.code === "auth/invalid-credential") {
+        alert("Incorrect email or password.");
+      } else {
+        alert(error.message);
+      }
+    }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        navigate("/home");
-      })
-      .catch((error) => {
+    try {
+      await signInWithPopup(auth, provider);
+      navigate("/home");
+    } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        alert("User not found. Please sign up first.");
+      } else if (error.code === "auth/invalid-credential") {
+        alert("IIncorrect email or password.");
+      } else {
         alert(error.message);
-      });
+      }
+    }
   };
+
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gray-100">

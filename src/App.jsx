@@ -3,6 +3,7 @@ import Login from "./components/Login"
 import Home from "./components/Home"
 import Signup from "./components/Signup"
 import Protectedroute from "./components/Protectedroute"
+import ErrorPage from "./components/ErrorPage"
 
 const App = () => {
     return (
@@ -14,8 +15,9 @@ const App = () => {
                         <Protectedroute>
                             <Home />
                         </Protectedroute>
-                            } />
+                    } />
                     <Route path="/signup" element={<Signup />} />
+                    <Route path="*" element={<ErrorPage />} />
                 </Routes>
             </BrowserRouter>
         </div>
