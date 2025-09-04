@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import Header from "./Header";
 import { useEffect, useState } from "react";
 import { db } from "../config/firebase";
@@ -26,12 +26,35 @@ const Home = () => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleShoes = async (e) => {
     e.preventDefault();
     await addDoc(shoesCollectionRef, input);
     setInput({ brand: "", size: "", color: "" });
-    fetchShoes(); 
+    fetchShoes();
   };
+
+  const handleDelete = async (id) => {
+    try {
+      let res = await deleteDoc(doc(db, "shoes", id))
+      fetchShoes()
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const handleEdit = async (id) => {
+    try {
+      let ref = updateDoc(doc(db, "shoes", id, {
+        brand: "",
+        size: "",
+        color: ""
+      }))
+      fetchShoes()
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
 
   return (
     <>
@@ -40,7 +63,7 @@ const Home = () => {
         <div className="container mx-auto max-w-4xl bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Add New Shoe</h2>
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <form onSubmit={handleShoes} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <input
               type="text"
               name="brand"
@@ -100,10 +123,10 @@ const Home = () => {
                         <td className="py-2 px-4 border-b">{shoe.size}</td>
                         <td className="py-2 px-4 border-b">{shoe.color}</td>
                         <td className="py-2 px-4 border-b space-x-2 text-center">
-                          <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded">
+                          <button onClick={() => { handleEdit(shoe.id) }} className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded">
                             Edit
                           </button>
-                          <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                          <button onClick={() => { handleDelete(shoe.id) }} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
                             Delete
                           </button>
                         </td>
