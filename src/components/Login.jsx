@@ -2,6 +2,7 @@ import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { auth } from "../config/firebase";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [input, setInput] = useState({ email: "", password: "" });
@@ -14,21 +15,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(input.email.trim() === "" || input.password.trim() === ""){
-      alert("please fill all input filled")
+    if (input.email.trim() === "" || input.password.trim() === "") {
+      toast.error("please fill all input filled")
     }
 
     try {
       await signInWithEmailAndPassword(auth, input.email, input.password);
       setInput({ email: "", password: "" });
       navigate("/home");
+      toast.success("User LoggedIn successfully...");
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        alert("User not found. Please sign up first.");
+        toast.error("User not found. Please sign up first.")
       } else if (error.code === "auth/invalid-credential") {
-        alert("Incorrect email or password.");
+        toast.error("Incorrect email or password.")
       } else {
-        alert(error.message);
+        toast.error(error.message);
       }
     }
   };
@@ -38,25 +40,26 @@ const Login = () => {
     try {
       await signInWithPopup(auth, provider);
       navigate("/home");
+      toast.success("User loggedIn Successfully...");
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        alert("User not found. Please sign up first.");
+        toast.error("User not found. Please sign up first.")
       } else if (error.code === "auth/invalid-credential") {
-        alert("IIncorrect email or password.");
+        toast.error("Incorrect email or password.")
       } else {
-        alert(error.message);
+        toast.error(error.message);
       }
     }
   };
 
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="container mx-auto px-4 py-12 max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 bg-white rounded-lg shadow-lg">
+    <section className="min-h-screen flex px-7 items-center justify-center bg-gray-100">
+      <div className="container mx-auto sm:px-8 py-8 max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 bg-white rounded-lg shadow-lg">
 
-        <div className="flex flex-col justify-center px-6">
+        <div className="flex flex-col justify-center px-4">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">WELCOME BACK</h1>
-          <p className="text-gray-600 mb-8">Welcome back! Please enter your details.</p>
+          <p className="text-gray-600 mb-8">Please enter your details.</p>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
@@ -94,6 +97,9 @@ const Login = () => {
               >
                 Sign In
               </button>
+              <div className="text-center font-semibold">
+                <span>or</span>
+              </div>
 
               <button
                 type="button"
@@ -106,9 +112,10 @@ const Login = () => {
             </div>
 
             <button className="text-center text-sm text-gray-600 mt-6">
-              Don’t have an account?{" "}
+              Don't have an account?
               <Link to="/signup" className="text-pink-600 hover:underline">
-                Sign up for free!
+                <span> </span>
+                <span>Sign up for free!</span>
               </Link>
             </button>
           </form>
