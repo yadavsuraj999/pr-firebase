@@ -60,6 +60,7 @@ const Dashboard = () => {
     const handleDelete = async (id) => {
         try {
             let res = await deleteDoc(doc(db, "shoes", id))
+
             fetchShoes()
             toast.success("shoes deleted successfully...");
         } catch (error) {
@@ -157,7 +158,11 @@ const Dashboard = () => {
                                                         <button onClick={() => { handleEdit(shoe.id) }} className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded">
                                                             Edit
                                                         </button>
-                                                        <button onClick={() => { handleDelete(shoe.id) }} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded mt-2">
+                                                        <button onClick={() => {
+                                                            handleDelete(shoe.id)
+                                                            setUpdate(null)
+                                                            setInput({ brand: "", size: "", color: "" })
+                                                        }} className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded mt-2">
                                                             Delete
                                                         </button>
                                                     </td>

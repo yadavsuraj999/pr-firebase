@@ -50,11 +50,13 @@ const Header = () => {
           {user && (
             <div className="flex items-center gap-2 sm:gap-3 ml-4">
               <img
-                src={user.photoURL || "/images/admin.png"} // fallback if no photo
+                src={user.photoURL || "/images/admin.png"} 
+                onError={(e)=>{e.currentTarget.src = "/images/admin.png"}}
                 alt={user.displayName || "Admin"}
                 className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border"
               />
               <span className="text-gray-700 font-medium text-sm sm:text-base">
+                {console.log(user.photoURL)}
                 {user.displayName || "Admin"}
               </span>
             </div>
